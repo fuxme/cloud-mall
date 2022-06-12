@@ -16,15 +16,7 @@ spring:
               - PUT
               - OPTION
       routes:
-        - id: mid-nacos
-          uri: http://localhost:9848
-          predicates:
-            - Path=/nacos/**
-        - id: app-sso
-          uri: lb://app-sso
-          predicates:
-            - Path=/sso/**
-        - id: app-platform
-          uri: lb://app-platform
+        - id: app-account
+          uri: lb://app-account
           predicates:
             - Path=/user/**,/menu/**,/role/**
