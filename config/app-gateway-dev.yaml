@@ -1,0 +1,30 @@
+server:
+  port: 80
+
+spring:
+  cloud:
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowed-origins: "*"
+            allowed-headers: "*"
+            allowed-methods:
+              - GET
+              - POST
+              - DELETE
+              - PUT
+              - OPTION
+      routes:
+        - id: mid-nacos
+          uri: http://localhost:9848
+          predicates:
+            - Path=/nacos/**
+        - id: app-sso
+          uri: lb://app-sso
+          predicates:
+            - Path=/sso/**
+        - id: app-platform
+          uri: lb://app-platform
+          predicates:
+            - Path=/user/**,/menu/**,/role/**

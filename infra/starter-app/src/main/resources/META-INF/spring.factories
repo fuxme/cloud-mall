@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  cn.fuxme.starter.app.config.FeignAutoConfig,\
+  cn.fuxme.starter.app.config.Resilience4jConfig

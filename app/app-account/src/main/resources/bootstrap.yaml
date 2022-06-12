@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: app-account
+  profiles:
+    active: dev
+  cloud:
+    config:
+      name: global, ${spring.application.name}
+      uri: localhost:8888

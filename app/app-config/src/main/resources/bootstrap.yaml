@@ -1,0 +1,21 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: app-config
+  profiles:
+    active: git
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://gitea.fuxme.cn/wuhao/cloud-mall
+          search-paths: /config
+          default-label: master
+          username: wuhao
+          password: wuhwan
+
+logging:
+  level:
+    root: debug

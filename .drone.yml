@@ -1,0 +1,106 @@
+kind: pipeline
+type: kubernetes
+name: build
+
+steps:
+  - name: build-jar
+    image: maven:3-jdk-8
+    commands:
+      - mvn package -DskipTests=true -B -V
+
+trigger:
+  branch:
+    - main
+  event:
+    - push
+
+---
+
+kind: pipeline
+type: kubernetes
+name: deploy-admin
+
+steps:
+  - name: build-image
+    image: plugins/docker
+    settings:
+      registry: harbor.fuxme.cn
+      repo: harbor.fuxme.cn/library/javastack
+      tags:
+        - ${DRONE_COMMIT_SHA}
+        - latest
+      username:
+        from_secret: harbor_username
+      password:
+        from_secret: harbor_password
+  - name: deploy
+    image: bh90210/dron8s:latest
+    settings:
+      yaml: deploy.yaml
+      drone_commit_sha: ${DRONE_COMMIT_SHA}
+
+trigger:
+  branch:
+    - main
+  event:
+    - push
+
+depends_on:
+  - build
+
+---
+kind: pipeline
+type: kubernetes
+name: deploy-user
+
+steps:
+  - name: build-image
+    image: plugins/docker
+    settings:
+      registry: harbor.fuxme.cn
+      repo: harbor.fuxme.cn/library/javastack
+      tags:
+        - ${DRONE_COMMIT_SHA}
+        - latest
+      username:
+        from_secret: harbor_username
+      password:
+        from_secret: harbor_password
+  - name: deploy
+    image: bh90210/dron8s:latest
+    settings:
+      yaml: deploy.yaml
+      drone_commit_sha: ${DRONE_COMMIT_SHA}
+
+trigger:
+  branch:
+    - main
+  event:
+    - push
+
+depends_on:
+  - build
+---
+
+kind: pipeline
+type: kubernetes
+name: notify
+
+steps:
+  - name: build-ding
+    image: lddsb/drone-dingtalk-message
+    settings:
+      token:
+        from_secret: dingtalk_token
+      type: markdown
+      sha_link: true
+
+trigger:
+  branch:
+    - main
+  event:
+    - push
+
+depends_on:
+  - deploy-admin
+  - deploy-user

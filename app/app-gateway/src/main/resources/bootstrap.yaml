@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: app-gateway
+  profiles:
+    active: dev
+  cloud:
+    config:
+      name: global, ${spring.application.name}
+
+

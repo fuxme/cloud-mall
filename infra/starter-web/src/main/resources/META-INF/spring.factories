@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  cn.fuxme.infra.web.handler.GlobalExceptionHandler
